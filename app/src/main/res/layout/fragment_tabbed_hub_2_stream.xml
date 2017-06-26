@@ -6,11 +6,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.carlmccann2.spicebag.activities.HubActivity$PlaceholderFragment">
+    tools:context="com.example.carlmccann2.spicebag.fragments.StreamFragment">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/list_view_tab_2_stream"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+    </ListView>
 
 </RelativeLayout>

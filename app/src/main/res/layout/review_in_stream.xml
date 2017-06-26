@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/text_view_review_in_stream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.16"
+        android:textColor="#000000"/>
+    <ImageView
+        android:id="@+id/image_view_review_in_stream"
+        android:layout_width="match_parent"
+        android:layout_height="237dp"
+        android:contentDescription="Photo of spicebag from review" />
+
+    <TextView
+        android:id="@+id/text_view_review_in_stream_actual_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:height="50dp"/>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_review_in_stream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RatingBar
+            android:id="@+id/rating_bar_review_in_stream"
+            style="?android:attr/ratingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+        <Button
+            android:id="@+id/button_review_in_stream"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rating_bar_review_in_stream"
+            android:layout_toLeftOf="@id/rating_bar_review_in_stream"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="L"/>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

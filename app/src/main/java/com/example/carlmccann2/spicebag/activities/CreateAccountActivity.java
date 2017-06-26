@@ -1,5 +1,8 @@
 package com.example.carlmccann2.spicebag.activities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,6 +21,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 /**
@@ -39,7 +43,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (createAccount()){
+                switch (createAccount()) {
                     case EMAIL_EXISTS:
                         Toast.makeText(CreateAccountActivity.this, "Email already in use", Toast.LENGTH_SHORT).show();
                         break;
@@ -55,67 +59,77 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
 
-
     }
 
-    public int createAccount(){
-        String firstName = ((EditText) findViewById(R.id.create_account_first_name)).getText().toString();
-        String lastName = ((EditText) findViewById(R.id.create_account_last_name)).getText().toString();
-        String username = ((EditText) findViewById(R.id.create_account_username)).getText().toString();
-        String email = ((EditText) findViewById(R.id.create_account_email)).getText().toString();
-        String password = ((EditText) findViewById(R.id.create_account_password)).getText().toString();
-        String retypePassword = ((EditText) findViewById(R.id.create_account_retype_password)).getText().toString();
+    public int createAccount() {
+        final String firstName = ((EditText) findViewById(R.id.create_account_first_name)).getText().toString();
+        final String lastName = ((EditText) findViewById(R.id.create_account_last_name)).getText().toString();
+        final String username = ((EditText) findViewById(R.id.create_account_username)).getText().toString();
+        final String email = ((EditText) findViewById(R.id.create_account_email)).getText().toString();
+        final String password = ((EditText) findViewById(R.id.create_account_password)).getText().toString();
+        final String retypePassword = ((EditText) findViewById(R.id.create_account_retype_password)).getText().toString();
 
-        if(password.equals(retypePassword)){
 
-            //TODO: Check if email already exists in db
-            if(true){
+        // TODO: get on username email etc to verify new user, then post
+        if (password.equals(retypePassword) && !firstName.equals("") && !lastName.equals("") &&
+                !username.equals("") && !email.equals("") && !password.equals("")) {
 
-                User user = new User(firstName, lastName, username, email, password);
-                ObjectMapper mapper = new ObjectMapper();
+            ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+                new AsyncTask<String, Void, String>() {
 
-                try {
-                    String json = mapper.writeValueAsString(user);
+                    @Override
+                    protected String doInBackground(String... strings) {
+                        String urlString = "http://" + IP.address + ":8080/spicebag-1.0/spicebag/user/add";
+                        User user = new User(firstName, lastName, username, email, password);
+                        ObjectMapper mapper = new ObjectMapper();
 
-                    String urlString = "http://" + IP.address + ":8080/spicebag-1.0/spicebag/user/add";
+                        try {
+                            String json = mapper.writeValueAsString(user);
+                            URL url = new URL(urlString);
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                    URL url = new URL(urlString);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                            connection.setDoOutput(true);
+                            connection.setUseCaches(false);
 
-                    connection.setDoOutput(true);
-                    connection.setUseCaches(false);
+                            connection.setRequestMethod("POST");
+                            connection.setRequestProperty("Content-Type", "application/json");
+                            connection.setRequestProperty("charset", "UTF8");
 
-                    connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.setRequestProperty("charset", "UTF8");
+                            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+                            outputStream.write(json.toString().getBytes("UTF8"));
 
-                    for (int i = 0; i < 1000; i++) {
-                        System.out.println(json);
-                        System.out.println(url);
+                            return Integer.toString(connection.getResponseCode());
+
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        } catch (ProtocolException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
                     }
 
-                    DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-                    outputStream.write(json.toString().getBytes("UTF8"));
+                    @Override
+                    protected void onPostExecute(String s) {
+                        super.onPostExecute(s);
+                        if (s.equals("204")){
+                            Toast.makeText(CreateAccountActivity.this, "Account created", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
 
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                }.execute();
+
+
+                return SUCCESS;
             }
-            else{
-                return EMAIL_EXISTS;
-            }
 
 
-        }
-        else{
-            return PASSWORD_MISMATCH;
         }
         return SUCCESS;
     }
-
-
 }

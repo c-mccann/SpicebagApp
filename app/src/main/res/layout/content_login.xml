@@ -23,7 +23,7 @@
         android:text="Spicebag"
         android:textSize="26sp"
         android:textAlignment="center"
-        android:textColor="#008000"
+        android:textColor="@color/spicebagGreen"
         android:layout_weight="2"
         />
 

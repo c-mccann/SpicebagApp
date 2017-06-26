@@ -5,5 +5,12 @@ package com.example.carlmccann2.spicebag;
  */
 
 public class IP {
-    public static String address = "147.252.148.132";
+    // DIT
+//    public static String address = "147.252.148.132";
+
+    // Home Network Macbook
+//    public static String address = "192.168.0.106";
+
+    // Home Network elemOS
+    public static String address = "192.168.0.114";
 }

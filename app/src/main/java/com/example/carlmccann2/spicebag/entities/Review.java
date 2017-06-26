@@ -1,29 +1,37 @@
 package com.example.carlmccann2.spicebag.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 /**
  * Created by carlmccann2 on 18/06/2017.
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Review {
     private String review;
     private byte[] spicebag_photo;
     private Integer star_rating;
     private Timestamp created;
-    private Integer restaurant_id;
-    private Integer user_id;
+    private Restaurant restaurant;
+    private User user;
 
 
-    public Review(String review, byte[] spicebag_photo, Integer star_rating, Timestamp created, Integer restaurant_id, Integer user_id) {
+    public Review(String review, byte[] spicebag_photo, Integer star_rating, Timestamp created, Restaurant restaurant, User user) {
         this.review = review;
         this.spicebag_photo = spicebag_photo;
         this.star_rating = star_rating;
         this.created = created;
-        this.restaurant_id = restaurant_id;
-        this.user_id = user_id;
+        this.restaurant = restaurant;
+        this.user = user;
     }
 
+
+    public Review() {
+    }
 
     public String getReview() {
         return review;
@@ -57,19 +65,31 @@ public class Review {
         this.created = created;
     }
 
-    public Integer getRestaurant_id() {
-        return restaurant_id;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurant_id(Integer restaurant_id) {
-        this.restaurant_id = restaurant_id;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "review='" + review + '\'' +
+                //", spicebag_photo=" + Arrays.toString(spicebag_photo) +
+                ", star_rating=" + star_rating +
+                ", created=" + created +
+                ", restaurant=" + restaurant +
+                ", user=" + user +
+                '}';
     }
 }

@@ -65,14 +65,16 @@ public class LoginActivity extends AppCompatActivity {
         final String username = ((EditText) findViewById(R.id.login_email_edit_text)).getText().toString();
         final String password = ((EditText) findViewById(R.id.login_password_edit_text)).getText().toString();
 
+        if(username.equals("") || password.equals("")){
+            Toast.makeText(this, "Please enter both fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        // TODO: get on username only, then a check between the passwords, rather than get on both
 
         final String urlString = "http://" + IP.address + ":8080/spicebag-1.0/spicebag/user/" + username + "/" + password;
-        try {
-            URL url = new URL(urlString);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
 
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(cm.getActiveNetworkInfo() != null && cm. getActiveNetworkInfo().isConnected()){
@@ -119,39 +121,31 @@ public class LoginActivity extends AppCompatActivity {
 
 //                    setResult(string.toString());
                     System.out.println("Response JSON: " + string.toString());
+                    String toastInfo = "";
 
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
                     try {
                         User user = mapper.readValue(string.toString(), User.class);
                         if(user.getUsername().equals(username) && user.getPassword().equals(password)){
-                            Intent intent = new Intent(LoginActivity.this, HubActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, TabbedHubActivity.class);
                             intent.putExtra("user", mapper.writeValueAsString(user));
                             startActivity(intent);
                             finish();
                         }
-                        else if(user.getUsername().equals(username) && !user.getPassword().equals(password)){
-                            Toast.makeText(LoginActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
-                        }
-                        else if(!user.getUsername().equals(username) && user.getPassword().equals(password)){
-                            Toast.makeText(LoginActivity.this, "Wrong Username", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(LoginActivity.this, "Wrong Details", Toast.LENGTH_SHORT).show();
-                        }
 
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        toastInfo = "Incorrect details entered";
                     }
 
-                    return string.toString();
+
+                    return toastInfo;
                 }
 
                 @Override
                 protected void onPostExecute(String s) {
                     super.onPostExecute(s);
+                    if(!s.equals(""))   Toast.makeText(LoginActivity.this, s, Toast.LENGTH_SHORT).show();
                 }
             }.execute();
 
